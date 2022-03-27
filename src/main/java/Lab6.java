@@ -39,6 +39,7 @@ public class Lab6 {
         int[][][] imageArray = App.convertToArray(timg1);
         int[][][] imageArray1 = App.convertToArray(timg1);
         float r,g,b;
+        System.out.println("@1" + imageArray1[100][100][2]);
         // Codes from lecture slide
         // for Mask of size 3x3, no border extension
         for(int y=1; y<h-1; y++){
@@ -51,11 +52,12 @@ public class Lab6 {
                         b = b + mask[1-s][1-t]*imageArray[x+s][y+t][3]; //b
                     }
                 }
-                imageArray1[x][y][1] = Math.round(Math.abs(r));  //r
+                imageArray1[x][y][1] = Math.round(Math.abs(r));//r
                 imageArray1[x][y][2] = Math.round(Math.abs(g));//g
                 imageArray1[x][y][3] = Math.round(Math.abs(b));//b
             }
         }
+        System.out.println("@" + imageArray1[100][100][2]);
         return App.autoShiftAndRescale(imageArray1);
     }
 

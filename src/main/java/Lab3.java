@@ -17,16 +17,9 @@ public class Lab3 {
         // Add each value of the image together
         for(int y=0; y<h; y++){
             for(int x=0; x<w; x++){
-                ImageArray3[x][y][0] = ImageArray1[x][y][0];
                 ImageArray3[x][y][1] = ImageArray1[x][y][1] + ImageArray2[x][y][1]; //r
                 ImageArray3[x][y][2] = ImageArray1[x][y][2] + ImageArray2[x][y][2]; //g
                 ImageArray3[x][y][3] = ImageArray1[x][y][3] + ImageArray2[x][y][3]; //b
-//                if (ImageArray3[x][y][1]<0) { ImageArray3[x][y][1] = 0; }
-//                if (ImageArray3[x][y][2]<0) { ImageArray3[x][y][2] = 0; }
-//                if (ImageArray3[x][y][3]<0) { ImageArray3[x][y][3] = 0; }
-//                if (ImageArray3[x][y][1]>255) { ImageArray3[x][y][1] = 255; }
-//                if (ImageArray3[x][y][2]>255) { ImageArray3[x][y][2] = 255; }
-//                if (ImageArray3[x][y][3]>255) { ImageArray3[x][y][3] = 255; }
             }
         }
         return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
@@ -43,10 +36,144 @@ public class Lab3 {
         // Add each value of the image together
         for(int y=0; y<h; y++){
             for(int x=0; x<w; x++){
-                ImageArray3[x][y][0] = ImageArray1[x][y][0];
                 ImageArray3[x][y][1] = Math.abs(ImageArray1[x][y][1] - ImageArray2[x][y][1]); //r
                 ImageArray3[x][y][2] = Math.abs(ImageArray1[x][y][2] - ImageArray2[x][y][2]); //g
                 ImageArray3[x][y][3] = Math.abs(ImageArray1[x][y][3] - ImageArray2[x][y][3]); //b
+            }
+        }
+        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+    }
+
+    public static BufferedImage multiplication(BufferedImage timg1, BufferedImage timg2){
+        int w = timg1.getWidth();
+        int h = timg1.getHeight();
+        // Convert the image to array
+        int[][][] ImageArray1 = App.convertToArray(timg1);
+        int[][][] ImageArray2 = App.convertToArray(timg2);
+        int[][][] ImageArray3 = new int[w][h][4];
+
+        // Add each value of the image together
+        for(int y=0; y<h; y++){
+            for(int x=0; x<w; x++){
+                ImageArray3[x][y][1] = (ImageArray1[x][y][1] * ImageArray2[x][y][1]); //r
+                ImageArray3[x][y][2] = (ImageArray1[x][y][2] * ImageArray2[x][y][2]); //g
+                ImageArray3[x][y][3] = (ImageArray1[x][y][3] * ImageArray2[x][y][3]); //b
+            }
+        }
+        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+    }
+
+    public static BufferedImage division(BufferedImage timg1, BufferedImage timg2){
+        int w = timg1.getWidth();
+        int h = timg1.getHeight();
+        // Convert the image to array
+        int[][][] ImageArray1 = App.convertToArray(timg1);
+        int[][][] ImageArray2 = App.convertToArray(timg2);
+        int[][][] ImageArray3 = new int[w][h][4];
+
+        // Add each value of the image together
+        for(int y=0; y<h; y++){
+            for(int x=0; x<w; x++){
+                //Can't divide by 0, so add an if expression
+                ImageArray3[x][y][1] = (ImageArray2[x][y][1] == 0 ) ? ImageArray1[x][y][1] :
+                        (ImageArray1[x][y][1] / ImageArray2[x][y][1]); //r
+                ImageArray3[x][y][2] = (ImageArray2[x][y][2] == 0 ) ? ImageArray1[x][y][2] :
+                        (ImageArray1[x][y][2] / ImageArray2[x][y][2]); //r
+                ImageArray3[x][y][3] = (ImageArray2[x][y][3] == 0 ) ? ImageArray1[x][y][3] :
+                        (ImageArray1[x][y][3] / ImageArray2[x][y][3]); //r
+            }
+        }
+        // Convert the array to BufferedImage with auto rescaling
+        return App.autoShiftAndRescale(ImageArray3);
+    }
+
+    public static BufferedImage not(BufferedImage timg1){
+        int w = timg1.getWidth();
+        int h = timg1.getHeight();
+        // Convert the image to array
+        int[][][] ImageArray1 = App.convertToArray(timg1);
+        int[][][] ImageArray2 = new int[w][h][4];
+        int r,g,b;
+        // Codes from lecture
+        for(int y=0; y<h; y++){
+            for(int x=0; x<w; x++){
+                r = ImageArray1[x][y][1]; //r
+                g = ImageArray1[x][y][2]; //g
+                b = ImageArray1[x][y][3]; //b
+                /*
+                  ~ 按位取反运算符翻转操作数的每一位，即0变成1，1变成0。
+                  & 如果相对应位都是1，则结果为1，否则为0
+                  0xFF 11111111
+                 */
+                ImageArray2[x][y][1] = (~r)&0xFF; //r
+                ImageArray2[x][y][2] = (~g)&0xFF; //g
+                ImageArray2[x][y][3] = (~b)&0xFF; //b
+            }
+        }
+        // Convert the array to BufferedImage
+        return App.convertToBimage(ImageArray2);
+    }
+
+    public static BufferedImage and(BufferedImage timg1, BufferedImage timg2){
+        int w = timg1.getWidth();
+        int h = timg1.getHeight();
+        // Convert the image to array
+        int[][][] ImageArray1 = App.convertToArray(timg1);
+        int[][][] ImageArray2 = App.convertToArray(timg2);
+        int[][][] ImageArray3 = new int[w][h][4];
+
+        // Add each value of the image together
+        for(int y=0; y<h; y++){
+            for(int x=0; x<w; x++){
+                /* & bitwise and */
+                ImageArray3[x][y][1] = ImageArray1[x][y][1] & ImageArray2[x][y][1]; //r
+                ImageArray3[x][y][2] = ImageArray1[x][y][2] & ImageArray2[x][y][2]; //g
+                ImageArray3[x][y][3] = ImageArray1[x][y][3] & ImageArray2[x][y][3]; //b
+            }
+        }
+        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+    }
+
+    public static BufferedImage or(BufferedImage timg1, BufferedImage timg2){
+        int w = timg1.getWidth();
+        int h = timg1.getHeight();
+        // Convert the image to array
+        int[][][] ImageArray1 = App.convertToArray(timg1);
+        int[][][] ImageArray2 = App.convertToArray(timg2);
+        int[][][] ImageArray3 = new int[w][h][4];
+
+        // Add each value of the image together
+        for(int y=0; y<h; y++){
+            for(int x=0; x<w; x++){
+                /* | bitwise Inclusive or
+                *  如果相对应位都是 0，则结果为 0，否则为 1
+                */
+                ImageArray3[x][y][1] = ImageArray1[x][y][1] | ImageArray2[x][y][1]; //r
+                ImageArray3[x][y][2] = ImageArray1[x][y][2] | ImageArray2[x][y][2]; //g
+                ImageArray3[x][y][3] = ImageArray1[x][y][3] | ImageArray2[x][y][3]; //b
+            }
+        }
+        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+    }
+
+
+    public static BufferedImage xor(BufferedImage timg1, BufferedImage timg2){
+        int w = timg1.getWidth();
+        int h = timg1.getHeight();
+        // Convert the image to array
+        int[][][] ImageArray1 = App.convertToArray(timg1);
+        int[][][] ImageArray2 = App.convertToArray(timg2);
+        int[][][] ImageArray3 = new int[w][h][4];
+
+        // Add each value of the image together
+        for(int y=0; y<h; y++){
+            for(int x=0; x<w; x++){
+                /* ^ bitwise exclusive or
+                 *  如果相对应位值相同，则结果为0，否则为1
+                 */
+                ImageArray3[x][y][1] = ImageArray1[x][y][1] ^ ImageArray2[x][y][1]; //r
+                ImageArray3[x][y][2] = ImageArray1[x][y][2] ^ ImageArray2[x][y][2]; //g
+                ImageArray3[x][y][3] = ImageArray1[x][y][3] ^ ImageArray2[x][y][3]; //b
             }
         }
         return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage

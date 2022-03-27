@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.TreeSet;
 
 /**
@@ -25,7 +26,7 @@ public class App extends Component implements ActionListener {
     private static final JButton OPEN_BTN = new JButton("Open");
     private static final JButton OPEN_BTN_2 = new JButton("Open2");
     private static final JFrame JFRAME = new JFrame("Image Processing Demo");
-    String[] descs = {
+    final String[] descs = {
             "Original",
             "Negative",
             "Addition",
@@ -38,11 +39,11 @@ public class App extends Component implements ActionListener {
             "Random Look-up Table",
             "bit-plane slicing",
     };
-    String[] shiftAndRescale = {
+    final String[] shiftAndRescale = {
             "Rescale",
             "Shift",
     };
-    String[] masks = {
+    final String[] masks = {
             "Averaging",
             "Weighted averaging",
             "4-neighbour Laplacian",
@@ -54,6 +55,31 @@ public class App extends Component implements ActionListener {
             "Sobel Y",
             "Sobel"
     };
+    final String[] arithmeticAndBoolean = {
+            "Addition",
+            "Subtraction",
+            "Multiplication",
+            "Division",
+            "Not",
+            "AND",
+            "OR",
+            "XOR"
+    };
+
+    final String[] lab7 = {
+            "Salt-and-Pepper Noise",
+            "Min Filtering",
+            "Max Filtering",
+            "Midpoint Filtering",
+            "Median Filtering",
+    };
+
+    final String[] histogram = {
+            "Find Histogram",
+            "Histogram Normalisation",
+            "Histogram Equalisation",
+    };
+
     int opIndex ,lastOp;
     int w, h;
     private String filePath;
@@ -73,11 +99,11 @@ public class App extends Component implements ActionListener {
             /* Get file current location*/
             filePath = System.getProperty("user.dir") + System.getProperty("file.separator") +
                     "\\src\\main\\resources\\images";
-            bi = ImageIO.read(new File(filePath + "\\BaboonRGB.bmp"));
+            bi = ImageIO.read(new File(filePath + "\\Baboon.bmp"));
+            System.out.println(Arrays.deepToString(Lab5.normaliseHistogram(bi)));
             fileChooser.setCurrentDirectory(new File(filePath));
             w = bi.getWidth(null);
             h = bi.getHeight(null);
-            System.out.println(bi.getType());
             if (bi.getType() != BufferedImage.TYPE_INT_RGB) {
                 BufferedImage bi2 = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
                 Graphics big = bi2.getGraphics();
@@ -196,21 +222,40 @@ public class App extends Component implements ActionListener {
         filtering.setActionCommand("Filtering");
         filtering.addActionListener(app);
 
+        JComboBox orderStatisticsFiltering = new JComboBox(app.getLab7());
+        orderStatisticsFiltering.setActionCommand("OSF");
+        orderStatisticsFiltering.addActionListener(app);
+
+        JComboBox arithmeticAndBoolean = new JComboBox(app.getArithmeticAndBoolean());
+        arithmeticAndBoolean.setActionCommand("AAB");
+        arithmeticAndBoolean.addActionListener(app);
+
+        JComboBox histogram = new JComboBox(app.getHistogram());
+        histogram.setActionCommand("HE");
+        histogram.addActionListener(app);
+
+
         //Define 2 open file button
         OPEN_BTN.setActionCommand("openBtn");
         OPEN_BTN.addActionListener(app);
         OPEN_BTN_2.setActionCommand("open2Btn");
         OPEN_BTN_2.addActionListener(app);
 
+
         JPanel jPanel = new JPanel();
 
         jPanel.add(OPEN_BTN);
         jPanel.add(choices);
         jPanel.add(shiftAndRescale);
+        jPanel.add(arithmeticAndBoolean);
         jPanel.add(filtering);
+        jPanel.add(orderStatisticsFiltering);
+
+        jPanel.add(histogram);
+        jPanel.add(OPEN_BTN_2);
         jPanel.add(new JLabel("Save As"));
         jPanel.add(formats);
-        jPanel.add(OPEN_BTN_2);
+
 
         JFRAME.add("North", jPanel);
         JFRAME.pack();
@@ -226,12 +271,24 @@ public class App extends Component implements ActionListener {
         return descs;
     }
 
+    public String[] getHistogram() {
+        return histogram;
+    }
+
     public String[] getShiftAndRescale() {
         return shiftAndRescale;
     }
 
     public String[] getMasks() {
         return masks;
+    }
+
+    public String[] getLab7() {
+        return lab7;
+    }
+
+    public String[] getArithmeticAndBoolean() {
+        return arithmeticAndBoolean;
     }
 
     /**
@@ -356,6 +413,87 @@ public class App extends Component implements ActionListener {
         }
     }
 
+    public void orderStatisticsFiltering(int k) {
+        switch (k) {
+            // Salt-and-Pepper Noise
+            case 0:
+                biFiltered = Lab7.saltPepperNoiseGenerator(bi);
+                return;
+            // Min Filtering
+            case 1:
+                biFiltered = Lab7.minFiltering(bi);
+                return;
+            // Max Filtering
+            case 2:
+                biFiltered = Lab7.maxFiltering(bi);
+                return;
+            // Midpoint Filtering
+            case 3:
+                biFiltered = Lab7.midPointFiltering(bi);
+                return;
+            //Median Filtering
+            case 4:
+                biFiltered = Lab7.medianFiltering(bi);
+                return;
+            default:
+        }
+    }
+
+    public void arithmeticAndBoolean(int k) {
+        switch (k) {
+            // add
+            case 0:
+                biFiltered = Lab3.addition(bi,bi3);
+                return;
+            // sub
+            case 1:
+                biFiltered = Lab3.subtraction(bi,bi3);
+                return;
+            // mul
+            case 2:
+                biFiltered = Lab3.multiplication(bi,bi3);
+                return;
+            // div
+            case 3:
+                biFiltered = Lab3.division(bi,bi3);
+                return;
+            //Not
+            case 4:
+                biFiltered = Lab3.not(bi);
+                return;
+            //AND
+            case 5:
+                biFiltered = Lab3.and(bi,bi3);
+                return;
+            //OR
+            case 6:
+                biFiltered = Lab3.or(bi,bi3);
+                return;
+            //XOR
+            case 7:
+                biFiltered = Lab3.xor(bi,bi3);
+                return;
+            default:
+        }
+    }
+
+    public void histogramEqualisation(int k) {
+        switch (k) {
+            /* Finding Histogram */
+            case 0:
+//                biFiltered = Lab3.addition(bi,bi3);
+                return;
+            /* Histogram Normalisation */
+            case 1:
+//                biFiltered = Lab3.subtraction(bi,bi3);
+                return;
+            /* Histogram Equalisation */
+            case 2:
+                biFiltered = Lab5.histogramEqualisation(bi);
+                return;
+            default:
+        }
+    }
 
     public void filterImage() {
         if (opIndex == lastOp) {
@@ -413,6 +551,9 @@ public class App extends Component implements ActionListener {
             String formats = "Formats";
             String shiftAndRescale = "ShiftAndRescale";
             String imageFiltering = "Filtering";
+            String orderStatisticsFiltering = "OSF";
+            String arithmeticAndBoolean = "AAB";
+            String histogramEqualisation = "HE";
             if (setFilter.equals(cb.getActionCommand())) {
                 setOpIndex(cb.getSelectedIndex());
                 filterImage();
@@ -431,10 +572,18 @@ public class App extends Component implements ActionListener {
                     } catch (IOException ignored) {
                     }
                 }
-            } else if (shiftAndRescale.equals(cb.getActionCommand())) {
+            }
+            else if (shiftAndRescale.equals(cb.getActionCommand())) {
                 shiftAndRescale(cb.getSelectedIndex());
-            } else if (imageFiltering.equals(cb.getActionCommand())) {
+            }
+            else if (imageFiltering.equals(cb.getActionCommand())) {
                 imageFiltering(cb.getSelectedIndex());
+            }else if (orderStatisticsFiltering.equals(cb.getActionCommand())) {
+                orderStatisticsFiltering(cb.getSelectedIndex());
+            }else if (arithmeticAndBoolean.equals(cb.getActionCommand())) {
+                arithmeticAndBoolean(cb.getSelectedIndex());
+            }else if (histogramEqualisation.equals(cb.getActionCommand())) {
+                histogramEqualisation(cb.getSelectedIndex());
             }
         }
         if (e.getSource() == OPEN_BTN) {
