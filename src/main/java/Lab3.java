@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 /**
  * @author Jiping Lyu
@@ -22,7 +23,7 @@ public class Lab3 {
                 ImageArray3[x][y][3] = ImageArray1[x][y][3] + ImageArray2[x][y][3];
             }
         }
-        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+        return App.autoShiftAndRescale(ImageArray3);
     }
 
     public static BufferedImage subtraction(BufferedImage timg1, BufferedImage timg2){
@@ -60,7 +61,7 @@ public class Lab3 {
                 ImageArray3[x][y][3] = (ImageArray1[x][y][3] * ImageArray2[x][y][3]); //b
             }
         }
-        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+        return App.autoShiftAndRescale(ImageArray3);
     }
 
     public static BufferedImage division(BufferedImage timg1, BufferedImage timg2){
@@ -131,7 +132,7 @@ public class Lab3 {
                 ImageArray3[x][y][3] = ImageArray1[x][y][3] & ImageArray2[x][y][3]; //b
             }
         }
-        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+        return App.autoShiftAndRescale(ImageArray3);
     }
 
     public static BufferedImage or(BufferedImage timg1, BufferedImage timg2){
@@ -153,7 +154,7 @@ public class Lab3 {
                 ImageArray3[x][y][3] = ImageArray1[x][y][3] | ImageArray2[x][y][3]; //b
             }
         }
-        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+        return App.autoShiftAndRescale(ImageArray3);
     }
 
 
@@ -171,12 +172,28 @@ public class Lab3 {
                 /* ^ bitwise exclusive or
                  *  如果相对应位值相同，则结果为0，否则为1
                  */
-                ImageArray3[x][y][1] = ImageArray1[x][y][1] ^ ImageArray2[x][y][1]; //r
-                ImageArray3[x][y][2] = ImageArray1[x][y][2] ^ ImageArray2[x][y][2]; //g
-                ImageArray3[x][y][3] = ImageArray1[x][y][3] ^ ImageArray2[x][y][3]; //b
+                ImageArray3[x][y][1] = ImageArray1[x][y][1] ^ ImageArray2[x][y][1];
+                ImageArray3[x][y][2] = ImageArray1[x][y][2] ^ ImageArray2[x][y][2];
+                ImageArray3[x][y][3] = ImageArray1[x][y][3] ^ ImageArray2[x][y][3];
             }
         }
-        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+        return App.autoShiftAndRescale(ImageArray3);
+    }
+
+    public static BufferedImage selectedROI(BufferedImage timg1, int[][] roi){
+        int w = timg1.getWidth();
+        int h = timg1.getHeight();
+        // Convert the image to array
+        int[][][] ImageArray1 = App.convertToArray(timg1);
+
+        // Add each value of the image together
+        for(int y=0; y<h; y++){
+            for(int x=0; x<w; x++){
+                ImageArray1[x][y][0] = roi[x][y];
+            }
+        }
+//        System.out.println(Arrays.deepToString(ImageArray1));
+        return App.convertToBimage(ImageArray1,0);
     }
 
 

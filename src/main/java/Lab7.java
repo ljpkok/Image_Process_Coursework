@@ -19,13 +19,10 @@ public class Lab7 {
             for(int x=0; x<width; x++){
                 double rand = Math.random();
                 if (rand > 0.9){
-                    array2[x][y][1] = 255;
-                    array2[x][y][2] = 255;
-                    array2[x][y][3] = 255;
+                    array2[x][y][1] = array2[x][y][2] =  array2[x][y][3] = 255;
                 } else if ( rand < 0.1){
-                    array2[x][y][1] = 0;
-                    array2[x][y][2] = 0;
-                    array2[x][y][3] = 0;
+                    array2[x][y][1] = array2[x][y][2] =  array2[x][y][3] =  0;
+
                 }
             }}
         return App.convertToBimage(array2);
@@ -36,6 +33,8 @@ public class Lab7 {
         int height = timg.getHeight();
         int[][][] array1 = App.convertToArray(timg);
         int[][][] array2 = App.convertToArray(timg);
+
+        /* Codes edited from lecture slides*/
         for (int y = 1; y < height -1 ; y++) {
             for (int x = 1; x < width -1 ; x++) {
                 k = 0;
@@ -63,6 +62,8 @@ public class Lab7 {
         int height = timg.getHeight();
         int[][][] array1 = App.convertToArray(timg);
         int[][][] array2 = App.convertToArray(timg);
+
+        /* Codes edited from lecture slides*/
         for (int y = 1; y < height -1 ; y++) {
             for (int x = 1; x < width - 1; x++) {
                 k = 0;
@@ -90,6 +91,7 @@ public class Lab7 {
         int height = timg.getHeight();
         int[][][] array1 = App.convertToArray(timg);
         int[][][] array2 = App.convertToArray(timg);
+        /* Codes edited from lecture slides*/
         for (int y = 1; y < height -1 ; y++) {
             for (int x = 1; x < width -1 ; x++) {
                 k = 0;
@@ -117,6 +119,7 @@ public class Lab7 {
         int height = timg.getHeight();
         int[][][] array1 = App.convertToArray(timg);
         int[][][] array2 = App.convertToArray(timg);
+        /* Codes edited from lecture slides*/
         for (int y = 1; y < height - 1 ; y++) {
             for (int x = 1; x < width - 1; x++) {
                 k = 0;

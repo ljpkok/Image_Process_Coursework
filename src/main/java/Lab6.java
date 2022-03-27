@@ -9,8 +9,8 @@ public class Lab6 {
         int w = timg1.getWidth();
         int h = timg1.getHeight();
         // Convert the image to array
-        int[][][] imageArray = App.convertToArray(timg1);
-        int[][][] imageArray1 = App.convertToArray(timg1);
+        int[][][] imageArray =  App.convertToArray(timg1);
+        int[][][] imageArray1 = new int[w][h][4];
         float r,g,b;
         // Codes from lecture slide
         // for Mask of size 3x3, no border extension
@@ -37,9 +37,8 @@ public class Lab6 {
         int h = timg1.getHeight();
         // Convert the image to array
         int[][][] imageArray = App.convertToArray(timg1);
-        int[][][] imageArray1 = App.convertToArray(timg1);
+        int[][][] imageArray1 = new int[w][h][4];
         float r,g,b;
-        System.out.println("@1" + imageArray1[100][100][2]);
         // Codes from lecture slide
         // for Mask of size 3x3, no border extension
         for(int y=1; y<h-1; y++){
@@ -57,16 +56,7 @@ public class Lab6 {
                 imageArray1[x][y][3] = Math.round(Math.abs(b));//b
             }
         }
-        System.out.println("@" + imageArray1[100][100][2]);
         return App.autoShiftAndRescale(imageArray1);
-    }
-
-    public static BufferedImage roberts(BufferedImage timg1) {
-        float[][] rA = {{0,0,0},{0,0,-1},{0,1,0}};
-        float[][] rB = {{0,0,0},{0,-1,-1},{0,0,0}};
-        BufferedImage timg0 = convolution(timg1,rA);
-        BufferedImage timg2 = convolution(timg1,rB);
-        return  Lab3.addition(timg0,timg2);
     }
 
 }

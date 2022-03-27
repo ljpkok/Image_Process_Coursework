@@ -22,6 +22,7 @@ public class App extends Component implements ActionListener {
     //************************************
     public static int tempI;
     public static float tempF;
+    private static final JButton roi = new JButton("ROI");
     private static final JButton OPEN_BTN = new JButton("Open");
     private static final JButton OPEN_BTN_2 = new JButton("Open2");
     private static final JFrame JFRAME = new JFrame("Image Processing Demo");
@@ -86,15 +87,18 @@ public class App extends Component implements ActionListener {
             "Automated Thresholding"
     };
 
+    private int[][] ROI;
     int opIndex ,lastOp;
     int w, h;
     private String filePath;
-    /**
+
+    /*
      * Define J component
      */
     private final JFileChooser fileChooser = new JFileChooser();
     private BufferedImage bi, biFiltered;
-    /**
+
+    /*
      * Bi3 is for second image
      */
     private BufferedImage bi3, biFiltered2;
@@ -115,6 +119,25 @@ public class App extends Component implements ActionListener {
                 Graphics big = bi2.getGraphics();
                 big.drawImage(bi, 0, 0, null);
                 biFiltered = bi = biFiltered2 = bi3 = bi2;
+            }
+            ROI = new int[512][512];
+            for (int i = 0; i < ROI.length; i++) {
+                for (int j = 0; j < ROI[0].length; j++) {
+                    if (i>= 50 && i<= 200 ){
+                        if (j>= 50 && j<= 200){
+                            ROI[i][j] = 255;
+                        }else{
+                            ROI[i][j] = 0;
+                        }
+                    }
+                    if (i>= 312 && i<= 462 ){
+                        if (j>= 312 && j<= 462){
+                            ROI[i][j] = 255;
+                        }else{
+                            ROI[i][j] = 0;
+                        }
+                    }
+                }
             }
         } catch (IOException e) {      // deal with the situation that th image has problem;/
             System.out.println("Image could not be read");
@@ -148,25 +171,20 @@ public class App extends Component implements ActionListener {
         return result;
     }
 
-    /************************************
+    /**
       Convert the  Array to BufferedImage
     */
     public static BufferedImage convertToBimage(int[][][] tmpArray) {
-
         int width = tmpArray.length;
         int height = tmpArray[0].length;
-
         BufferedImage tmpimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int a = tmpArray[x][y][0];
                 int r = tmpArray[x][y][1];
                 int g = tmpArray[x][y][2];
                 int b = tmpArray[x][y][3];
-
                 //set RGB value
-
                 int p = (a << 24) | (r << 16) | (g << 8) | b;
                 tmpimg.setRGB(x, y, p);
 
@@ -174,7 +192,24 @@ public class App extends Component implements ActionListener {
         }
         return tmpimg;
     }
+    public static BufferedImage convertToBimage(int[][][] tmpArray , int k) {
+        int width = tmpArray.length;
+        int height = tmpArray[0].length;
+        BufferedImage tmpimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int a = tmpArray[x][y][0];
+                int r = tmpArray[x][y][1];
+                int g = tmpArray[x][y][2];
+                int b = tmpArray[x][y][3];
+                //set RGB value
+                int p = (a << 24) | (r << 16) | (g << 8) | b;
+                tmpimg.setRGB(x, y, p);
 
+            }
+        }
+        return tmpimg;
+    }
     /**
      * Try to find maximum dynamic range
      * Set min to 0 and max to 255
@@ -209,46 +244,49 @@ public class App extends Component implements ActionListener {
                 System.exit(0);
             }
         });
+
         App app = new App();
         JFRAME.add("Center", app);
 
         JComboBox choices = new JComboBox(app.getDescriptions());
+        JComboBox formats = new JComboBox(app.getFormats());
+        JComboBox shiftAndRescale = new JComboBox(app.getShiftAndRescale());
+        JComboBox filtering = new JComboBox(app.getMasks());
+        JComboBox orderStatisticsFiltering = new JComboBox(app.getLab7());
+        JComboBox arithmeticAndBoolean = new JComboBox(app.getArithmeticAndBoolean());
+        JComboBox histogram = new JComboBox(app.getHistogram());
+        JComboBox lab8 = new JComboBox(app.getThresholding());
+
         choices.setActionCommand("SetFilter");
         choices.addActionListener(app);
 
-        JComboBox formats = new JComboBox(app.getFormats());
         formats.setActionCommand("Formats");
         formats.addActionListener(app);
 
-        JComboBox shiftAndRescale = new JComboBox(app.getShiftAndRescale());
         shiftAndRescale.setActionCommand("ShiftAndRescale");
         shiftAndRescale.addActionListener(app);
 
-        JComboBox filtering = new JComboBox(app.getMasks());
         filtering.setActionCommand("Filtering");
         filtering.addActionListener(app);
 
-        JComboBox orderStatisticsFiltering = new JComboBox(app.getLab7());
         orderStatisticsFiltering.setActionCommand("OSF");
         orderStatisticsFiltering.addActionListener(app);
 
-        JComboBox arithmeticAndBoolean = new JComboBox(app.getArithmeticAndBoolean());
         arithmeticAndBoolean.setActionCommand("AAB");
         arithmeticAndBoolean.addActionListener(app);
 
-        JComboBox histogram = new JComboBox(app.getHistogram());
         histogram.setActionCommand("HE");
         histogram.addActionListener(app);
 
-        JComboBox lab8 = new JComboBox(app.getThresholding());
         lab8.setActionCommand("Lab8");
         lab8.addActionListener(app);
 
+
         //Define 2 open file button
-        OPEN_BTN.setActionCommand("openBtn");
         OPEN_BTN.addActionListener(app);
-        OPEN_BTN_2.setActionCommand("open2Btn");
         OPEN_BTN_2.addActionListener(app);
+        roi.setActionCommand("ROI");
+        roi.addActionListener(app);
 
 
         JPanel jPanel = new JPanel();
@@ -262,9 +300,9 @@ public class App extends Component implements ActionListener {
         jPanel.add(histogram);
         jPanel.add(lab8);
         jPanel.add(OPEN_BTN_2);
+        jPanel.add(roi);
         jPanel.add(new JLabel("Save As"));
         jPanel.add(formats);
-
 
         JFRAME.add("North", jPanel);
         JFRAME.pack();
@@ -344,7 +382,6 @@ public class App extends Component implements ActionListener {
                 imageArray[x][y][3] = 255 - imageArray[x][y][3];
             }
         }
-
         return convertToBimage(imageArray);
     }
 
@@ -405,7 +442,9 @@ public class App extends Component implements ActionListener {
                 return;
             /* Roberts */
             case 6:
-                biFiltered = Lab6.roberts(bi);
+                float[][] rA = {{0,0,0},{0,0,-1},{0,1,0}};
+                float[][] rB = {{0,0,0},{0,-1,-1},{0,0,0}};
+                biFiltered = Lab3.addition(Lab6.convolution(bi, rA), Lab6.convolution(bi, rB));
                 return;
             /* Sobel X */
             case 7:
@@ -633,6 +672,8 @@ public class App extends Component implements ActionListener {
 
         } else if (e.getSource() == OPEN_BTN_2) {
             openFile(App.this,1);
+        } else if (e.getSource() == roi) {
+            bi = biFiltered =  Lab3.selectedROI(bi,ROI);
         }
         repaint();
     }

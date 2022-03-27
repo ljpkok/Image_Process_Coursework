@@ -9,7 +9,7 @@ public class Lab2 {
     // Image Shifting
     //************************************
     public static BufferedImage imageShifting(BufferedImage timg, int t){
-        //Edited from code in the Lecture Slide Topic 3
+        /* Edited from code in the Lecture Slide Topic 3*/
         int width = timg.getWidth();
         int height = timg.getHeight();
         //  Convert the image to array
@@ -36,7 +36,7 @@ public class Lab2 {
     // Image rescaling
     //************************************
     public static BufferedImage imageScaling(BufferedImage timg, float s){
-        //Edited from code in the Lecture Slide Topic 3
+        /* Edited from code in the Lecture Slide Topic 3*/
         int width = timg.getWidth();
         int height = timg.getHeight();
         //  Convert the image to array
