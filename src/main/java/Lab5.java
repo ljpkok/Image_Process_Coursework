@@ -73,9 +73,7 @@ public class Lab5 {
             histogramBLUT[i] = histogramBLUT[i-1]+nHistogramB[i];
         }
         /*
-         *  Multiply cumulative values s'k by the
-         *  maximum gray-level value L-1 and round the
-         *  results to obtain sk.
+         *  Multiply cumulative values s'k by the maximum gray-level value L-1 (255) and round the results to obtain sk.
          */
         for (int i = 1; i < 255; i++) {
             histogramRLUT[i] = Math.round(histogramRLUT[i] * 255);

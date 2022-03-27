@@ -80,6 +80,13 @@ public class App extends Component implements ActionListener {
             "Histogram Equalisation",
     };
 
+    final String[] thresholding = {
+            "Mean",
+            "Standard Deviation",
+            "Simple Thresholding",
+            "Automated Thresholding"
+    };
+
     int opIndex ,lastOp;
     int w, h;
     private String filePath;
@@ -100,7 +107,7 @@ public class App extends Component implements ActionListener {
             filePath = System.getProperty("user.dir") + System.getProperty("file.separator") +
                     "\\src\\main\\resources\\images";
             bi = ImageIO.read(new File(filePath + "\\Baboon.bmp"));
-            System.out.println(Arrays.deepToString(Lab5.normaliseHistogram(bi)));
+//            System.out.println(Arrays.deepToString(Lab5.normaliseHistogram(bi)));
             fileChooser.setCurrentDirectory(new File(filePath));
             w = bi.getWidth(null);
             h = bi.getHeight(null);
@@ -234,6 +241,9 @@ public class App extends Component implements ActionListener {
         histogram.setActionCommand("HE");
         histogram.addActionListener(app);
 
+        JComboBox lab8 = new JComboBox(app.getThresholding());
+        lab8.setActionCommand("Lab8");
+        lab8.addActionListener(app);
 
         //Define 2 open file button
         OPEN_BTN.setActionCommand("openBtn");
@@ -250,8 +260,8 @@ public class App extends Component implements ActionListener {
         jPanel.add(arithmeticAndBoolean);
         jPanel.add(filtering);
         jPanel.add(orderStatisticsFiltering);
-
         jPanel.add(histogram);
+        jPanel.add(lab8);
         jPanel.add(OPEN_BTN_2);
         jPanel.add(new JLabel("Save As"));
         jPanel.add(formats);
@@ -269,6 +279,10 @@ public class App extends Component implements ActionListener {
 
     String[] getDescriptions() {
         return descs;
+    }
+
+    public String[] getThresholding() {
+        return thresholding;
     }
 
     public String[] getHistogram() {
@@ -342,7 +356,7 @@ public class App extends Component implements ActionListener {
         switch (k) {
             /* Rescale */
             case 0: {
-                /* get int from pop up */
+                /* get float from pop up */
                 new InputPop(JFRAME, "Rescale Factor", 0);
                 biFiltered = Lab2.imageScaling(bi, tempF);
                 return;
@@ -481,11 +495,11 @@ public class App extends Component implements ActionListener {
         switch (k) {
             /* Finding Histogram */
             case 0:
-//                biFiltered = Lab3.addition(bi,bi3);
+                System.out.println("Histogram" + Arrays.deepToString(Lab5.findHistogram(bi)));
                 return;
             /* Histogram Normalisation */
             case 1:
-//                biFiltered = Lab3.subtraction(bi,bi3);
+                System.out.println("Normalisation" + Arrays.deepToString(Lab5.normaliseHistogram(bi)));
                 return;
             /* Histogram Equalisation */
             case 2:
@@ -494,6 +508,32 @@ public class App extends Component implements ActionListener {
             default:
         }
     }
+    public void lab8(int k) {
+
+        switch (k) {
+            /* Mean */
+            case 0:
+                float[] temp = Lab8.findMean(bi);
+                System.out.println("rMean:" + temp[0] + " gMean:" + temp[1] + " bMean:" + temp[2]);
+                return;
+            /* Standard Deviation */
+            case 1:
+                float[] temp2 = Lab8.findSD(bi);
+                System.out.println("rSD:" + temp2[0] + " gSD:" + temp2[1] + " bSD:" + temp2[2]);
+                return;
+            /* Simple Thresholding */
+            case 2:
+                new InputPop(JFRAME, "Threshold", 1);
+                biFiltered = Lab8.simpleT(bi , tempI);
+                return;
+            /* Automated Thresholding */
+            case 3:
+                biFiltered = Lab8.autoT(bi);
+                return;
+            default:
+        }
+    }
+
 
     public void filterImage() {
         if (opIndex == lastOp) {
@@ -554,6 +594,7 @@ public class App extends Component implements ActionListener {
             String orderStatisticsFiltering = "OSF";
             String arithmeticAndBoolean = "AAB";
             String histogramEqualisation = "HE";
+            String lab8 = "Lab8";
             if (setFilter.equals(cb.getActionCommand())) {
                 setOpIndex(cb.getSelectedIndex());
                 filterImage();
@@ -584,6 +625,8 @@ public class App extends Component implements ActionListener {
                 arithmeticAndBoolean(cb.getSelectedIndex());
             }else if (histogramEqualisation.equals(cb.getActionCommand())) {
                 histogramEqualisation(cb.getSelectedIndex());
+            }else if (lab8.equals(cb.getActionCommand())) {
+                lab8(cb.getSelectedIndex());
             }
         }
         if (e.getSource() == OPEN_BTN) {
