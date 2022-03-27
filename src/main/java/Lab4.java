@@ -111,8 +111,6 @@ public class Lab4 {
 
             }
         }
-
-
         return App.convertToBimage(ImageArray);
     }
 

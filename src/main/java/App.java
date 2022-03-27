@@ -2,10 +2,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +19,10 @@ public class App extends Component implements ActionListener {
     //************************************
     public static int tempI;
     public static float tempF;
-    private static final JButton roi = new JButton("ROI");
+    private static final JButton roiBTN = new JButton("ROI");
     private static final JButton OPEN_BTN = new JButton("Open");
     private static final JButton OPEN_BTN_2 = new JButton("Open2");
+    private static final JButton undoBTN = new JButton("Undo");
     private static final JFrame JFRAME = new JFrame("Image Processing Demo");
     final String[] descs = {
             "Original",
@@ -91,6 +89,7 @@ public class App extends Component implements ActionListener {
     int opIndex ,lastOp;
     int w, h;
     private String filePath;
+    private static App app;
 
     /*
      * Define J component
@@ -151,9 +150,7 @@ public class App extends Component implements ActionListener {
     public static int[][][] convertToArray(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
-
         int[][][] result = new int[width][height][4];
-
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int p = image.getRGB(x, y);
@@ -161,7 +158,6 @@ public class App extends Component implements ActionListener {
                 int r = (p >> 16) & 0xff;
                 int g = (p >> 8) & 0xff;
                 int b = p & 0xff;
-
                 result[x][y][0] = a;
                 result[x][y][1] = r;
                 result[x][y][2] = g;
@@ -177,7 +173,7 @@ public class App extends Component implements ActionListener {
     public static BufferedImage convertToBimage(int[][][] tmpArray) {
         int width = tmpArray.length;
         int height = tmpArray[0].length;
-        BufferedImage tmpimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage tmpimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int a = tmpArray[x][y][0];
@@ -205,7 +201,6 @@ public class App extends Component implements ActionListener {
                 //set RGB value
                 int p = (a << 24) | (r << 16) | (g << 8) | b;
                 tmpimg.setRGB(x, y, p);
-
             }
         }
         return tmpimg;
@@ -245,7 +240,7 @@ public class App extends Component implements ActionListener {
             }
         });
 
-        App app = new App();
+        app = new App();
         JFRAME.add("Center", app);
 
         JComboBox choices = new JComboBox(app.getDescriptions());
@@ -281,17 +276,17 @@ public class App extends Component implements ActionListener {
         lab8.setActionCommand("Lab8");
         lab8.addActionListener(app);
 
-
         //Define 2 open file button
         OPEN_BTN.addActionListener(app);
         OPEN_BTN_2.addActionListener(app);
-        roi.setActionCommand("ROI");
-        roi.addActionListener(app);
+        roiBTN.setActionCommand("ROI");
+        roiBTN.addActionListener(app);
 
 
         JPanel jPanel = new JPanel();
+        jPanel.setLayout(new FlowLayout());
 
-        jPanel.add(OPEN_BTN);
+//        jPanel.add(OPEN_BTN);
         jPanel.add(choices);
         jPanel.add(shiftAndRescale);
         jPanel.add(arithmeticAndBoolean);
@@ -299,11 +294,19 @@ public class App extends Component implements ActionListener {
         jPanel.add(orderStatisticsFiltering);
         jPanel.add(histogram);
         jPanel.add(lab8);
-        jPanel.add(OPEN_BTN_2);
-        jPanel.add(roi);
+//        jPanel.add(OPEN_BTN_2);
+        jPanel.add(roiBTN);
+//        jPanel.add(undoBTN);
         jPanel.add(new JLabel("Save As"));
         jPanel.add(formats);
 
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(createFileMenu());
+        menuBar.add(createEditMenu());
+        menuBar.setVisible(true);
+
+        JFRAME.setJMenuBar(menuBar);
+        JFRAME.setExtendedState(JFRAME.MAXIMIZED_BOTH);
         JFRAME.add("North", jPanel);
         JFRAME.pack();
         JFRAME.setVisible(true);
@@ -364,6 +367,7 @@ public class App extends Component implements ActionListener {
         g.drawImage(biFiltered, 0, 0, null);
         g.drawImage(biFiltered2, biFiltered.getWidth() + 10, 0, null);
     }
+
 
     /**
      * Image Negative
@@ -672,10 +676,61 @@ public class App extends Component implements ActionListener {
 
         } else if (e.getSource() == OPEN_BTN_2) {
             openFile(App.this,1);
-        } else if (e.getSource() == roi) {
+        } else if (e.getSource() == roiBTN) {
             bi = biFiltered =  Lab3.selectedROI(bi,ROI);
         }
+        if (e.getSource() instanceof JMenuItem) {
+            JMenuItem cb = (JMenuItem) e.getSource();
+            if ("mOpen1".equals(cb.getActionCommand())) {
+                openFile(App.this,0);
+            } else if ("mOpen2".equals(cb.getActionCommand())) {
+                openFile(App.this,1);
+            }
+
+        }
         repaint();
+    }
+
+    /* Menu Creation
+     */
+    private static JMenu createFileMenu()
+    {
+        JMenu menu=new JMenu("File(F)");
+        menu.setMnemonic(KeyEvent.VK_F);
+        JMenuItem item=new JMenuItem("Open(N)",KeyEvent.VK_N);
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+        item.setActionCommand("mOpen1");
+        item.addActionListener(app);
+        menu.add(item);
+        item=new JMenuItem("Open2(O)",KeyEvent.VK_O);
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK));
+        item.setActionCommand("mOpen2");
+        item.addActionListener(app);
+        menu.add(item);
+        item=new JMenuItem("Save(S)",KeyEvent.VK_S);
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
+        item.setActionCommand("mSave");
+        item.addActionListener(app);
+        menu.add(item);
+        menu.addSeparator();
+        item=new JMenuItem("Exit(E)",KeyEvent.VK_E);
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,ActionEvent.CTRL_MASK));
+        item.setActionCommand("mExit");
+        item.addActionListener(app);
+        menu.add(item);
+        return menu;
+    }
+
+    private static JMenu createEditMenu()
+    {
+        JMenu menu=new JMenu("Edit(N)");
+        menu.setMnemonic(KeyEvent.VK_F);
+        JMenuItem item=new JMenuItem("Undo(N)",KeyEvent.VK_N);
+        item.setActionCommand("mUndo");
+        item.addActionListener(app);
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,ActionEvent.CTRL_MASK));
+        menu.add(item);
+        return menu;
     }
 
     /** Open file in first image place */

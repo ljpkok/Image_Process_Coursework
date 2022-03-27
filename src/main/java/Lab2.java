@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 /**
  * Implement lab2 content: pixel value re-scaling/shifting

@@ -20,9 +20,8 @@ public class Lab7 {
                 double rand = Math.random();
                 if (rand > 0.9){
                     array2[x][y][1] = array2[x][y][2] =  array2[x][y][3] = 255;
-                } else if ( rand < 0.1){
+                } else if (rand < 0.1){
                     array2[x][y][1] = array2[x][y][2] =  array2[x][y][3] =  0;
-
                 }
             }}
         return App.convertToBimage(array2);

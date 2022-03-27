@@ -10,7 +10,7 @@ public class Lab6 {
         int h = timg1.getHeight();
         // Convert the image to array
         int[][][] imageArray =  App.convertToArray(timg1);
-        int[][][] imageArray1 = new int[w][h][4];
+        int[][][] imageArray1 = App.convertToArray(timg1);
         float r,g,b;
         // Codes from lecture slide
         // for Mask of size 3x3, no border extension
@@ -37,7 +37,7 @@ public class Lab6 {
         int h = timg1.getHeight();
         // Convert the image to array
         int[][][] imageArray = App.convertToArray(timg1);
-        int[][][] imageArray1 = new int[w][h][4];
+        int[][][] imageArray1 = App.convertToArray(timg1);
         float r,g,b;
         // Codes from lecture slide
         // for Mask of size 3x3, no border extension
