@@ -66,7 +66,6 @@ public class Lab8 {
         g.dispose();
 
         int[][][] array1 = App.convertToArray(timg2);
-//        System.out.println(Arrays.deepToString(array1));
         for(int y=0; y<height; y++){
             for(int x=0; x<width; x++){
                 array1[x][y][1] = array1[x][y][2] = array1[x][y][3]= (array1[x][y][1]<= k) ? 0 : 255;
@@ -94,7 +93,6 @@ public class Lab8 {
 
         int[][][] array1 = App.convertToArray(timg2);
         float[] mean = findMean(timg2);
-//        System.out.println(Arrays.deepToString(array1));
         /*
         *  In initiation, assume that
         *   – Background

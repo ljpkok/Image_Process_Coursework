@@ -18,9 +18,9 @@ public class Lab2 {
         // To shift by t and rescale by s without finding the min and the max
         for(int y=0; y<height; y++){
             for(int x=0; x<width; x++){
-                imageArray2[x][y][1] = imageArray1[x][y][1]+t; //r
-                imageArray2[x][y][2] = imageArray1[x][y][2]+t; //g
-                imageArray2[x][y][3] = imageArray1[x][y][3]+t; //b
+                imageArray2[x][y][1] = imageArray1[x][y][1]+t;
+                imageArray2[x][y][2] = imageArray1[x][y][2]+t;
+                imageArray2[x][y][3] = imageArray1[x][y][3]+t;
                 if (imageArray2[x][y][1]<0) { imageArray2[x][y][1] = 0; }
                 if (imageArray2[x][y][2]<0) { imageArray2[x][y][2] = 0; }
                 if (imageArray2[x][y][3]<0) { imageArray2[x][y][3] = 0; }
@@ -45,9 +45,9 @@ public class Lab2 {
         // To shift by t and rescale by s without finding the min and the max
         for(int y=0; y<height; y++){
             for(int x=0; x<width; x++){
-                imageArray2[x][y][1] = Math.round(s*(imageArray1[x][y][1])); //r
-                imageArray2[x][y][2] = Math.round(s*(imageArray1[x][y][2])); //g
-                imageArray2[x][y][3] = Math.round(s*(imageArray1[x][y][3])); //b
+                imageArray2[x][y][1] = Math.round(s*(imageArray1[x][y][1]));
+                imageArray2[x][y][2] = Math.round(s*(imageArray1[x][y][2]));
+                imageArray2[x][y][3] = Math.round(s*(imageArray1[x][y][3]));
                 if (imageArray2[x][y][1]<0) { imageArray2[x][y][1] = 0; }
                 if (imageArray2[x][y][2]<0) { imageArray2[x][y][2] = 0; }
                 if (imageArray2[x][y][3]<0) { imageArray2[x][y][3] = 0; }

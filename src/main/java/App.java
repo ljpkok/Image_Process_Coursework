@@ -20,7 +20,6 @@ public class App extends Component implements ActionListener {
     //************************************
     // List of the options(Original, Negative); correspond to the cases:
     //************************************
-
     public static int tempI;
     public static float tempF;
     private static final JButton OPEN_BTN = new JButton("Open");
@@ -340,13 +339,13 @@ public class App extends Component implements ActionListener {
         // Image Negative Operation:
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                imageArray[x][y][1] = 255 - imageArray[x][y][1];  //r
-                imageArray[x][y][2] = 255 - imageArray[x][y][2];  //g
-                imageArray[x][y][3] = 255 - imageArray[x][y][3];  //b
+                imageArray[x][y][1] = 255 - imageArray[x][y][1];
+                imageArray[x][y][2] = 255 - imageArray[x][y][2];
+                imageArray[x][y][3] = 255 - imageArray[x][y][3];
             }
         }
 
-        return convertToBimage(imageArray);  // Convert the array to BufferedImage
+        return convertToBimage(imageArray);
     }
 
     /**

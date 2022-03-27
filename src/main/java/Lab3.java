@@ -17,9 +17,9 @@ public class Lab3 {
         // Add each value of the image together
         for(int y=0; y<h; y++){
             for(int x=0; x<w; x++){
-                ImageArray3[x][y][1] = ImageArray1[x][y][1] + ImageArray2[x][y][1]; //r
-                ImageArray3[x][y][2] = ImageArray1[x][y][2] + ImageArray2[x][y][2]; //g
-                ImageArray3[x][y][3] = ImageArray1[x][y][3] + ImageArray2[x][y][3]; //b
+                ImageArray3[x][y][1] = ImageArray1[x][y][1] + ImageArray2[x][y][1];
+                ImageArray3[x][y][2] = ImageArray1[x][y][2] + ImageArray2[x][y][2];
+                ImageArray3[x][y][3] = ImageArray1[x][y][3] + ImageArray2[x][y][3];
             }
         }
         return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
@@ -36,12 +36,12 @@ public class Lab3 {
         // Add each value of the image together
         for(int y=0; y<h; y++){
             for(int x=0; x<w; x++){
-                ImageArray3[x][y][1] = Math.abs(ImageArray1[x][y][1] - ImageArray2[x][y][1]); //r
-                ImageArray3[x][y][2] = Math.abs(ImageArray1[x][y][2] - ImageArray2[x][y][2]); //g
-                ImageArray3[x][y][3] = Math.abs(ImageArray1[x][y][3] - ImageArray2[x][y][3]); //b
+                ImageArray3[x][y][1] = Math.abs(ImageArray1[x][y][1] - ImageArray2[x][y][1]);
+                ImageArray3[x][y][2] = Math.abs(ImageArray1[x][y][2] - ImageArray2[x][y][2]);
+                ImageArray3[x][y][3] = Math.abs(ImageArray1[x][y][3] - ImageArray2[x][y][3]);
             }
         }
-        return App.autoShiftAndRescale(ImageArray3);  // Convert the array to BufferedImage
+        return App.autoShiftAndRescale(ImageArray3);
     }
 
     public static BufferedImage multiplication(BufferedImage timg1, BufferedImage timg2){
@@ -97,17 +97,17 @@ public class Lab3 {
         // Codes from lecture
         for(int y=0; y<h; y++){
             for(int x=0; x<w; x++){
-                r = ImageArray1[x][y][1]; //r
-                g = ImageArray1[x][y][2]; //g
-                b = ImageArray1[x][y][3]; //b
+                r = ImageArray1[x][y][1];
+                g = ImageArray1[x][y][2];
+                b = ImageArray1[x][y][3];
                 /*
                   ~ 按位取反运算符翻转操作数的每一位，即0变成1，1变成0。
                   & 如果相对应位都是1，则结果为1，否则为0
                   0xFF 11111111
                  */
-                ImageArray2[x][y][1] = (~r)&0xFF; //r
-                ImageArray2[x][y][2] = (~g)&0xFF; //g
-                ImageArray2[x][y][3] = (~b)&0xFF; //b
+                ImageArray2[x][y][1] = (~r)&0xFF;
+                ImageArray2[x][y][2] = (~g)&0xFF;
+                ImageArray2[x][y][3] = (~b)&0xFF;
             }
         }
         // Convert the array to BufferedImage
