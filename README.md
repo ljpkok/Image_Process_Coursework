@@ -16,4 +16,6 @@
       <li> histogram equalisation [10%]</li>
       <li> thresholding [10%]</li>
     </ul>
+  <li>Enhance the program to be able to select a Region of Interest (ROI). Perform the image processing function on the ROI. [10%]</li>
+  <li>Enhance the program with a menu system for all the functions. Be able to perform a combination of image processing functions on the ROI. Include an "undo" function. [10%]</li>
 </ol>

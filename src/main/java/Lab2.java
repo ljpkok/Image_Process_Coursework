@@ -1,5 +1,4 @@
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 
 /**
  * Implement lab2 content: pixel value re-scaling/shifting
@@ -93,6 +92,23 @@ public class Lab2 {
                         (255*(array2[x][y][3]-bMin)/(bMax-bMin));
             }}
         return App.convertToBimage(array2);
+    }
+
+    /**
+     * Image rescaling and shift
+     */
+    public static BufferedImage randomArray(){
+        int[][][] array1 = new int[512][521][4];
+
+        for(int y=0; y<512; y++){
+            for(int x=0; x<512; x++){
+                array1[x][y][1] = 255;
+                array1[x][y][1] = (int) Math.round(Math.random()*80f);
+                array1[x][y][2] = (int) Math.round(Math.random()*80f);
+                array1[x][y][3] = (int) Math.round(Math.random()*80f);
+
+            }}
+        return App.convertToBimage(array1);
     }
 
 

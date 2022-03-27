@@ -22,7 +22,6 @@ public class App extends Component implements ActionListener {
     private static final JButton roiBTN = new JButton("ROI");
     private static final JButton OPEN_BTN = new JButton("Open");
     private static final JButton OPEN_BTN_2 = new JButton("Open2");
-    private static final JButton undoBTN = new JButton("Undo");
     private static final JFrame JFRAME = new JFrame("Image Processing Demo");
     final String[] descs = {
             "Original",
@@ -40,6 +39,7 @@ public class App extends Component implements ActionListener {
     final String[] shiftAndRescale = {
             "Rescale",
             "Shift",
+            "RandomAdd"
     };
     final String[] masks = {
             "Averaging",
@@ -406,6 +406,12 @@ public class App extends Component implements ActionListener {
                 /* get int from pop up */
                 new InputPop(JFRAME, "Shift Factor", 1);
                 biFiltered = Lab2.imageShifting(bi, tempI);
+            }
+            /* Random and add and rescale and shift*/
+            case 2: {
+                /* get int from pop up */
+                BufferedImage temp = Lab2.randomArray();
+                biFiltered = Lab3.addition(bi, temp);
             }
             default:
         }

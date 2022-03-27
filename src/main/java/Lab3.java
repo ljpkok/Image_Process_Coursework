@@ -1,5 +1,4 @@
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 
 /**
  * @author Jiping Lyu
