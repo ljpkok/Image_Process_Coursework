@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeSet;
 
@@ -14,15 +15,17 @@ import java.util.TreeSet;
  */
 public class App extends Component implements ActionListener {
 
-    //************************************
-    // List of the options(Original, Negative); correspond to the cases:
-    //************************************
-    public static int tempI;
-    public static float tempF;
     private static final JButton roiBTN = new JButton("ROI");
     private static final JButton OPEN_BTN = new JButton("Open");
     private static final JButton OPEN_BTN_2 = new JButton("Open2");
     private static final JFrame JFRAME = new JFrame("Image Processing Demo");
+    public static int tempI;
+    public static float tempF;
+
+
+    //************************************
+    // List of the options(Original, Negative); correspond to the cases:
+    //************************************
     final String[] descs = {
             "Original",
             "Negative",
@@ -96,6 +99,7 @@ public class App extends Component implements ActionListener {
      */
     private final JFileChooser fileChooser = new JFileChooser();
     private BufferedImage bi, biFiltered;
+    private ArrayList<BufferedImage> biFilteredList = new ArrayList<BufferedImage>();
 
     /*
      * Bi3 is for second image
@@ -117,6 +121,8 @@ public class App extends Component implements ActionListener {
                 BufferedImage bi2 = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
                 Graphics big = bi2.getGraphics();
                 big.drawImage(bi, 0, 0, null);
+                biFilteredList.add(bi2);
+                biFilteredList.add(bi2);
                 biFiltered = bi = biFiltered2 = bi3 = bi2;
             }
             ROI = new int[512][512];
@@ -306,7 +312,7 @@ public class App extends Component implements ActionListener {
         menuBar.setVisible(true);
 
         JFRAME.setJMenuBar(menuBar);
-        JFRAME.setExtendedState(JFRAME.MAXIMIZED_BOTH);
+        JFRAME.setExtendedState(Frame.MAXIMIZED_BOTH);
         JFRAME.add("North", jPanel);
         JFRAME.pack();
         JFRAME.setVisible(true);
@@ -357,6 +363,11 @@ public class App extends Component implements ActionListener {
         return formatSet.toArray(new String[0]);
     }
 
+    private BufferedImage getLast() {
+        return biFilteredList.get(biFilteredList.size()-1);
+    }
+
+
     void setOpIndex(int i) {
         opIndex = i;
     }
@@ -364,10 +375,9 @@ public class App extends Component implements ActionListener {
     @Override
     public void paint(Graphics g) { //  Repaint will call this function so the image will change.
 //        filterImage();
-        g.drawImage(biFiltered, 0, 0, null);
+        g.drawImage(getLast(), 0, 0, null);
         g.drawImage(biFiltered2, biFiltered.getWidth() + 10, 0, null);
     }
-
 
     /**
      * Image Negative
@@ -398,20 +408,23 @@ public class App extends Component implements ActionListener {
             case 0: {
                 /* get float from pop up */
                 new InputPop(JFRAME, "Rescale Factor", 0);
-                biFiltered = Lab2.imageScaling(bi, tempF);
+                biFilteredList.add(Lab2.imageScaling(getLast(), tempF));
+//                biFiltered = Lab2.imageScaling(bi, tempF);
                 return;
             }
             /* Shift*/
             case 1: {
                 /* get int from pop up */
                 new InputPop(JFRAME, "Shift Factor", 1);
-                biFiltered = Lab2.imageShifting(bi, tempI);
+                biFilteredList.add(Lab2.imageShifting(getLast(), tempI));
+//                biFiltered = Lab2.imageShifting(bi, tempI);
             }
             /* Random and add and rescale and shift*/
             case 2: {
                 /* get int from pop up */
                 BufferedImage temp = Lab2.randomArray();
-                biFiltered = Lab3.addition(bi, temp);
+                biFilteredList.add(Lab3.addition(getLast(), temp));
+//                biFiltered = Lab3.addition(bi, temp);
             }
             default:
         }
@@ -423,54 +436,64 @@ public class App extends Component implements ActionListener {
             // Averaging
             case 0:
                 float[][] averagingMask = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
-                biFiltered = Lab6.averaging(bi, averagingMask, 9);
+                biFiltered = Lab6.averaging(getLast(), averagingMask, 9);
+                biFilteredList.add(biFiltered);
                 return;
             // Weighted averaging
             case 1:
                 float[][] weightedMask = {{1, 2, 1}, {2, 4, 2}, {1, 2, 1}};
-                biFiltered = Lab6.averaging(bi, weightedMask, 16);
+                biFiltered = Lab6.averaging(getLast(), weightedMask, 16);
+                biFilteredList.add(biFiltered);
                 return;
             // 4-neighbour Laplacian
             case 2:
                 float[][] nlMask4 = {{0, -1, 0}, {-1, 4, -1}, {0, -1, 0}};
-                biFiltered = Lab6.convolution(bi, nlMask4);
+                biFiltered = Lab6.convolution(getLast(), nlMask4);
+                biFilteredList.add(biFiltered);
                 return;
             // 8-neighbour Laplacian
             case 3:
                 float[][] nlMask8 = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};
-                biFiltered = Lab6.convolution(bi, nlMask8);
+                biFiltered = Lab6.convolution(getLast(), nlMask8);
+                biFilteredList.add(biFiltered);
                 return;
             //4-neighbour Laplacian Enhancement
             case 4:
                 float[][] nlemask4 = {{0, -1, 0}, {-1, 5, -1}, {0, -1, 0}};
-                biFiltered = Lab6.convolution(bi, nlemask4);
+                biFiltered = Lab6.convolution(getLast(), nlemask4);
+                biFilteredList.add(biFiltered);
                 return;
             //8-neighbour Laplacian Enhancement
             case 5:
                 float[][] nlemask8 = {{-1, -1, -1}, {-1, 9, -1}, {-1, -1, -1}};
-                biFiltered = Lab6.convolution(bi, nlemask8);
+                biFiltered = Lab6.convolution(getLast(), nlemask8);
+                biFilteredList.add(biFiltered);
                 return;
             /* Roberts */
             case 6:
                 float[][] rA = {{0,0,0},{0,0,-1},{0,1,0}};
                 float[][] rB = {{0,0,0},{0,-1,-1},{0,0,0}};
-                biFiltered = Lab3.addition(Lab6.convolution(bi, rA), Lab6.convolution(bi, rB));
+                biFiltered = Lab3.addition(Lab6.convolution(getLast(), rA), Lab6.convolution(getLast(), rB));
+                biFilteredList.add(biFiltered);
                 return;
             /* Sobel X */
             case 7:
                 float[][] sobelX = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
-                biFiltered = Lab6.convolution(bi, sobelX);
+                biFiltered = Lab6.convolution(getLast(), sobelX);
+                biFilteredList.add(biFiltered);
                 return;
             /* Sobel Y */
             case 8:
                 float[][] sobelY = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
-                biFiltered = Lab6.convolution(bi, sobelY);
+                biFiltered = Lab6.convolution(getLast(), sobelY);
+                biFilteredList.add(biFiltered);
                 return;
             /* Sobel */
             case 9:
                 float[][] sobel1 = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
                 float[][] sobel2 = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
-                biFiltered = Lab3.addition(Lab6.convolution(bi, sobel1), Lab6.convolution(bi, sobel2));
+                biFiltered = Lab3.addition(Lab6.convolution(getLast(), sobel1), Lab6.convolution(getLast(), sobel2));
+                biFilteredList.add(biFiltered);
             default:
         }
     }
@@ -479,23 +502,28 @@ public class App extends Component implements ActionListener {
         switch (k) {
             // Salt-and-Pepper Noise
             case 0:
-                biFiltered = Lab7.saltPepperNoiseGenerator(bi);
+                biFiltered = Lab7.saltPepperNoiseGenerator(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             // Min Filtering
             case 1:
-                biFiltered = Lab7.minFiltering(bi);
+                biFiltered = Lab7.minFiltering(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             // Max Filtering
             case 2:
-                biFiltered = Lab7.maxFiltering(bi);
+                biFiltered = Lab7.maxFiltering(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             // Midpoint Filtering
             case 3:
-                biFiltered = Lab7.midPointFiltering(bi);
+                biFiltered = Lab7.midPointFiltering(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             //Median Filtering
             case 4:
-                biFiltered = Lab7.medianFiltering(bi);
+                biFiltered = Lab7.medianFiltering(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             default:
         }
@@ -505,35 +533,43 @@ public class App extends Component implements ActionListener {
         switch (k) {
             // add
             case 0:
-                biFiltered = Lab3.addition(bi,bi3);
+                biFiltered = Lab3.addition(getLast(),bi3);
+                biFilteredList.add(biFiltered);
                 return;
             // sub
             case 1:
-                biFiltered = Lab3.subtraction(bi,bi3);
+                biFiltered = Lab3.subtraction(getLast(),bi3);
+                biFilteredList.add(biFiltered);
                 return;
             // mul
             case 2:
-                biFiltered = Lab3.multiplication(bi,bi3);
+                biFiltered = Lab3.multiplication(getLast(),bi3);
+                biFilteredList.add(biFiltered);
                 return;
             // div
             case 3:
-                biFiltered = Lab3.division(bi,bi3);
+                biFiltered = Lab3.division(getLast(),bi3);
+                biFilteredList.add(biFiltered);
                 return;
             //Not
             case 4:
-                biFiltered = Lab3.not(bi);
+                biFiltered = Lab3.not(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             //AND
             case 5:
-                biFiltered = Lab3.and(bi,bi3);
+                biFiltered = Lab3.and(getLast(),bi3);
+                biFilteredList.add(biFiltered);
                 return;
             //OR
             case 6:
-                biFiltered = Lab3.or(bi,bi3);
+                biFiltered = Lab3.or(getLast(),bi3);
+                biFilteredList.add(biFiltered);
                 return;
             //XOR
             case 7:
-                biFiltered = Lab3.xor(bi,bi3);
+                biFiltered = Lab3.xor(getLast(),bi3);
+                biFilteredList.add(biFiltered);
                 return;
             default:
         }
@@ -543,15 +579,16 @@ public class App extends Component implements ActionListener {
         switch (k) {
             /* Finding Histogram */
             case 0:
-                System.out.println("Histogram" + Arrays.deepToString(Lab5.findHistogram(bi)));
+                System.out.println("Histogram" + Arrays.deepToString(Lab5.findHistogram(getLast())));
                 return;
             /* Histogram Normalisation */
             case 1:
-                System.out.println("Normalisation" + Arrays.deepToString(Lab5.normaliseHistogram(bi)));
+                System.out.println("Normalisation" + Arrays.deepToString(Lab5.normaliseHistogram(getLast())));
                 return;
             /* Histogram Equalisation */
             case 2:
-                biFiltered = Lab5.histogramEqualisation(bi);
+                biFiltered = Lab5.histogramEqualisation(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             default:
         }
@@ -561,22 +598,24 @@ public class App extends Component implements ActionListener {
         switch (k) {
             /* Mean */
             case 0:
-                float[] temp = Lab8.findMean(bi);
+                float[] temp = Lab8.findMean(getLast());
                 System.out.println("rMean:" + temp[0] + " gMean:" + temp[1] + " bMean:" + temp[2]);
                 return;
             /* Standard Deviation */
             case 1:
-                float[] temp2 = Lab8.findSD(bi);
+                float[] temp2 = Lab8.findSD(getLast());
                 System.out.println("rSD:" + temp2[0] + " gSD:" + temp2[1] + " bSD:" + temp2[2]);
                 return;
             /* Simple Thresholding */
             case 2:
                 new InputPop(JFRAME, "Threshold", 1);
-                biFiltered = Lab8.simpleT(bi , tempI);
+                biFiltered = Lab8.simpleT(getLast() , tempI);
+                biFilteredList.add(biFiltered);
                 return;
             /* Automated Thresholding */
             case 3:
-                biFiltered = Lab8.autoT(bi);
+                biFiltered = Lab8.autoT(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             default:
         }
@@ -591,41 +630,51 @@ public class App extends Component implements ActionListener {
         switch (opIndex) {
             /* original */
             case 0:
-                biFiltered = bi;
+                biFilteredList = new ArrayList<BufferedImage>();
+                biFilteredList.add(bi);
+                biFilteredList.add(bi);
                 return;
             /* Image Negative */
             case 1:
-                biFiltered = imageNegative(bi);
+                biFiltered = imageNegative(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             // Addition
             case 2:
-                biFiltered = Lab3.addition(bi, bi3);
+                biFiltered = Lab3.addition(getLast(), bi3);
+                biFilteredList.add(biFiltered);
                 return;
             // Subtraction
             case 3:
-                biFiltered = Lab3.subtraction(bi, bi3);
+                biFiltered = Lab3.subtraction(getLast(), bi3);
+                biFilteredList.add(biFiltered);
                 return;
             // Negative Linear Transform
             case 6:
-                biFiltered = Lab4.negativeLinearTrans(bi);
+                biFiltered = Lab4.negativeLinearTrans(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             // Logarithmic Function
             case 7:
-                biFiltered = Lab4.logarithmicFunction(bi);
+                biFiltered = Lab4.logarithmicFunction(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             // Power-Law
             case 8:
                 new InputPop(JFRAME, "Power-Law", 0);
-                biFiltered = Lab4.powerLaw(bi, tempF);
+                biFiltered = Lab4.powerLaw(getLast(), tempF);
+                biFilteredList.add(biFiltered);
                 return;
             // Random Look-up Table
             case 9:
-                biFiltered = Lab4.randomLUT(bi);
+                biFiltered = Lab4.randomLUT(getLast());
+                biFilteredList.add(biFiltered);
                 return;
             // bit-plane slicing
             case 10:
                 new InputPop(JFRAME, "Bit-plane slicing", 1);
-                biFiltered = Lab4.bitPlaneSlicing(bi, tempI);
+                biFiltered = Lab4.bitPlaneSlicing(getLast(), tempI);
+                biFilteredList.add(biFiltered);
                 return;
             default:
         }
@@ -683,7 +732,8 @@ public class App extends Component implements ActionListener {
         } else if (e.getSource() == OPEN_BTN_2) {
             openFile(App.this,1);
         } else if (e.getSource() == roiBTN) {
-            bi = biFiltered =  Lab3.selectedROI(bi,ROI);
+            biFiltered =  Lab3.selectedROI(bi,ROI);
+            biFilteredList.add(biFiltered);
         }
         if (e.getSource() instanceof JMenuItem) {
             JMenuItem cb = (JMenuItem) e.getSource();
@@ -691,10 +741,16 @@ public class App extends Component implements ActionListener {
                 openFile(App.this,0);
             } else if ("mOpen2".equals(cb.getActionCommand())) {
                 openFile(App.this,1);
+            } else if ("mUndo".equals(cb.getActionCommand())) {
+                undo();
             }
 
         }
         repaint();
+    }
+
+    private void undo() {
+        biFilteredList.remove(biFilteredList.size()-1);
     }
 
     /* Menu Creation
@@ -755,6 +811,9 @@ public class App extends Component implements ActionListener {
             try {
                 if (option == 0){
                     biFiltered = bi = ImageIO.read(file);
+                    biFilteredList = new ArrayList<BufferedImage>();
+                    biFilteredList.add(bi);
+                    biFilteredList.add(bi);
                     repaint();
                 } else if (option == 1){
                     biFiltered2 = bi3 = ImageIO.read(file);

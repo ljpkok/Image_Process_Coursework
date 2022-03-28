@@ -7,9 +7,9 @@ import java.util.Arrays;
  */
 public class Lab7 {
 
-    private static int[] rWindow = new int[9];
-    private static int[] gWindow = new int[9];
-    private static int[] bWindow = new int[9];
+    private static final int[] rWindow = new int[9];
+    private static final int[] gWindow = new int[9];
+    private static final int[] bWindow = new int[9];
     private static int k;
     public static BufferedImage saltPepperNoiseGenerator(BufferedImage timg){
         int width = timg.getWidth();
@@ -39,9 +39,9 @@ public class Lab7 {
                 k = 0;
                 for (int s = -1; s <= 1; s++) {
                     for (int t = -1; t <= 1; t++) {
-                        rWindow[k] = array1[x + s][y + t][1]; //r
-                        gWindow[k] = array1[x + s][y + t][2]; //g
-                        bWindow[k] = array1[x + s][y + t][3]; //b
+                        rWindow[k] = array1[x + s][y + t][1];
+                        gWindow[k] = array1[x + s][y + t][2];
+                        bWindow[k] = array1[x + s][y + t][3];
                         k++;
                     }
                 }
