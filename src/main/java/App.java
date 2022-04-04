@@ -23,16 +23,12 @@ public class App extends Component implements ActionListener {
     public static float tempF;
 
 
-    //************************************
-    // List of the options(Original, Negative); correspond to the cases:
-    //************************************
+    /*
+    List of the options(Original, Negative); correspond to the cases:
+    */
     final String[] descs = {
             "Original",
             "Negative",
-            "Addition",
-            "Subtraction",
-            "Multiplication",
-            "Division",
             "Negative Linear Transform",
             "Logarithmic Function",
             "Power-Law",
@@ -194,23 +190,7 @@ public class App extends Component implements ActionListener {
         }
         return tmpimg;
     }
-    public static BufferedImage convertToBimage(int[][][] tmpArray , int k) {
-        int width = tmpArray.length;
-        int height = tmpArray[0].length;
-        BufferedImage tmpimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int a = tmpArray[x][y][0];
-                int r = tmpArray[x][y][1];
-                int g = tmpArray[x][y][2];
-                int b = tmpArray[x][y][3];
-                //set RGB value
-                int p = (a << 24) | (r << 16) | (g << 8) | b;
-                tmpimg.setRGB(x, y, p);
-            }
-        }
-        return tmpimg;
-    }
+
     /**
      * Try to find maximum dynamic range
      * Set min to 0 and max to 255
@@ -231,6 +211,9 @@ public class App extends Component implements ActionListener {
                 if (max < ints[y][3]) {max = ints[y][3];}
             }
         }
+        /*
+        * Shift the min to 0, then make the diff between max and min to 255.
+        */
         int shiftFactor = -min;
         float rescaleFactor = 255f / (max - min);
         return Lab2.imageScalingAndShift(convertToBimage(imageArray), rescaleFactor, shiftFactor);
@@ -282,27 +265,29 @@ public class App extends Component implements ActionListener {
         lab8.setActionCommand("Lab8");
         lab8.addActionListener(app);
 
-        //Define 2 open file button
+        /* Define 2 open file button */
         OPEN_BTN.addActionListener(app);
         OPEN_BTN_2.addActionListener(app);
         roiBTN.setActionCommand("ROI");
         roiBTN.addActionListener(app);
 
-
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new FlowLayout());
-
-//        jPanel.add(OPEN_BTN);
+        jPanel.add(new JLabel("point processing/bit-plane slicing"));
         jPanel.add(choices);
+        jPanel.add(new JLabel("scale/shift"));
         jPanel.add(shiftAndRescale);
+        jPanel.add(new JLabel("arithmetic/boolean"));
         jPanel.add(arithmeticAndBoolean);
+        jPanel.add(new JLabel("filtering"));
         jPanel.add(filtering);
+        jPanel.add(new JLabel("OrderStatistics"));
         jPanel.add(orderStatisticsFiltering);
+        jPanel.add(new JLabel("Histogram"));
         jPanel.add(histogram);
+        jPanel.add(new JLabel("Threshold"));
         jPanel.add(lab8);
-//        jPanel.add(OPEN_BTN_2);
         jPanel.add(roiBTN);
-//        jPanel.add(undoBTN);
         jPanel.add(new JLabel("Save As"));
         jPanel.add(formats);
 
@@ -323,31 +308,31 @@ public class App extends Component implements ActionListener {
         return new Dimension(w, h);
     }
 
-    String[] getDescriptions() {
+    private String[] getDescriptions() {
         return descs;
     }
 
-    public String[] getThresholding() {
+    private String[] getThresholding() {
         return thresholding;
     }
 
-    public String[] getHistogram() {
+    private String[] getHistogram() {
         return histogram;
     }
 
-    public String[] getShiftAndRescale() {
+    private String[] getShiftAndRescale() {
         return shiftAndRescale;
     }
 
-    public String[] getMasks() {
+    private String[] getMasks() {
         return masks;
     }
 
-    public String[] getLab7() {
+    private String[] getLab7() {
         return lab7;
     }
 
-    public String[] getArithmeticAndBoolean() {
+    private String[] getArithmeticAndBoolean() {
         return arithmeticAndBoolean;
     }
 
@@ -593,8 +578,7 @@ public class App extends Component implements ActionListener {
             default:
         }
     }
-    public void lab8(int k) {
-
+    public void thresholding(int k) {
         switch (k) {
             /* Mean */
             case 0:
@@ -621,7 +605,6 @@ public class App extends Component implements ActionListener {
         }
     }
 
-
     public void filterImage() {
         if (opIndex == lastOp) {
             return;
@@ -639,39 +622,29 @@ public class App extends Component implements ActionListener {
                 biFiltered = imageNegative(getLast());
                 biFilteredList.add(biFiltered);
                 return;
-            // Addition
-            case 2:
-                biFiltered = Lab3.addition(getLast(), bi3);
-                biFilteredList.add(biFiltered);
-                return;
-            // Subtraction
-            case 3:
-                biFiltered = Lab3.subtraction(getLast(), bi3);
-                biFilteredList.add(biFiltered);
-                return;
             // Negative Linear Transform
-            case 6:
+            case 2:
                 biFiltered = Lab4.negativeLinearTrans(getLast());
                 biFilteredList.add(biFiltered);
                 return;
             // Logarithmic Function
-            case 7:
+            case 3:
                 biFiltered = Lab4.logarithmicFunction(getLast());
                 biFilteredList.add(biFiltered);
                 return;
             // Power-Law
-            case 8:
+            case 4:
                 new InputPop(JFRAME, "Power-Law", 0);
                 biFiltered = Lab4.powerLaw(getLast(), tempF);
                 biFilteredList.add(biFiltered);
                 return;
             // Random Look-up Table
-            case 9:
+            case 5:
                 biFiltered = Lab4.randomLUT(getLast());
                 biFilteredList.add(biFiltered);
                 return;
             // bit-plane slicing
-            case 10:
+            case 6:
                 new InputPop(JFRAME, "Bit-plane slicing", 1);
                 biFiltered = Lab4.bitPlaneSlicing(getLast(), tempI);
                 biFilteredList.add(biFiltered);
@@ -723,7 +696,7 @@ public class App extends Component implements ActionListener {
             }else if (histogramEqualisation.equals(cb.getActionCommand())) {
                 histogramEqualisation(cb.getSelectedIndex());
             }else if (lab8.equals(cb.getActionCommand())) {
-                lab8(cb.getSelectedIndex());
+                thresholding(cb.getSelectedIndex());
             }
         }
         if (e.getSource() == OPEN_BTN) {
@@ -787,10 +760,10 @@ public class App extends Component implements ActionListener {
     {
         JMenu menu=new JMenu("Edit(N)");
         menu.setMnemonic(KeyEvent.VK_F);
-        JMenuItem item=new JMenuItem("Undo(N)",KeyEvent.VK_N);
+        JMenuItem item=new JMenuItem("Undo",KeyEvent.VK_Z);
         item.setActionCommand("mUndo");
         item.addActionListener(app);
-        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,ActionEvent.CTRL_MASK));
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,ActionEvent.CTRL_MASK));
         menu.add(item);
         return menu;
     }
