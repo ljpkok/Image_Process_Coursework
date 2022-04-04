@@ -192,7 +192,7 @@ public class Lab3 {
             }
         }
 //        System.out.println(Arrays.deepToString(ImageArray1));
-        return App.convertToBimage(ImageArray1,0);
+        return App.convertToBimage(ImageArray1);
     }
 
 

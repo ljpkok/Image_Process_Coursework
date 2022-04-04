@@ -82,7 +82,7 @@ public class Lab4 {
         ImageArray1 = App.convertToArray(timg1);
         // for generating a LUT of random number 0-255
         for (int k = 0; k <= 255; k++) {
-            LUT[k] = (int) (Math.random() * 256);
+            LUT[k] = (int) Math.round (Math.random() * 256);
         }
         for(int y=0; y<h; y++){
             for(int x=0; x<w; x++){

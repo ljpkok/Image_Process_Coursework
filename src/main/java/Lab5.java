@@ -25,8 +25,7 @@ public class Lab5 {
                 histogramB[b]++;
             }
         }
-        float[][] tempA =  {histogramR, histogramG, histogramB};
-        return tempA;
+        return new float[][]{histogramR, histogramG, histogramB};
     }
 
     public static float[][] normaliseHistogram(BufferedImage timg) {
@@ -42,8 +41,7 @@ public class Lab5 {
             nHistogramG[k] = tempA[1][k]/height/width; // g
             nHistogramB[k] = tempA[2][k]/height/width; // b
         }
-        float[][] tempB =  {nHistogramR, nHistogramG, nHistogramB};
-        return tempB;
+        return new float[][]{nHistogramR, nHistogramG, nHistogramB};
     }
 
     public static BufferedImage histogramEqualisation(BufferedImage timg) {
@@ -63,6 +61,7 @@ public class Lab5 {
         histogramRLUT[0] = nHistogramR[0];
         histogramGLUT[0] = nHistogramG[0];
         histogramBLUT[0] = nHistogramB[0];
+
         /*
         *  Lecture topic 3, slide number 49
         *  Find the cumulative distribution based on the probability.
