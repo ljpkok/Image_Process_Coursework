@@ -1,8 +1,5 @@
 # ECS605U - IMAGE PROCESSING
 ## Coursework
-
-<iframe style="border: none;" src="https://cards.producthunt.com/cards/posts/319001?v=1" width="500" height="405" frameborder="0" scrolling="no" allowfullscreen></iframe>
-
 <ol>
   <li>Program in Java that:</li>
     <ul>
